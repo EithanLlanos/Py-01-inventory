@@ -1,6 +1,5 @@
 # -*- coding: latin-1 -*-
-
-
+import time
 
 
 # class Inventory
@@ -12,8 +11,6 @@
 # like add_item, update_item, and check_item_details. Use a dictionary to store the item details, where the key 
 # is the item_id and the value is a dictionary containing the item_name, stock_count, and price.
 
-import string
-import time
 
 
 class Inventory:
@@ -44,7 +41,7 @@ class Inventory:
         if stock==None: stock=self.__inventory[item_id]["item_stock"]
         if price==None: price=self.__inventory[item_id]["item_price"]
         self.__inventory[item_id]={"item_id":item_id, "item_name": name, "item_stock": stock, "item_price" : price}
-        return 0
+        return 
 
     def checkItem(self,item_id):
         return self.__inventory[item_id]
@@ -408,4 +405,38 @@ run(1,"shopInv")
 #        colStock=longitud_maxima["stock"],
 #        colDesc=longitud_maxima["descripcion"],
 #        colName=longitud_maxima["nombre"]
+#    ))
+
+
+
+##############################################################################################################################
+
+#def maxLength(maxLeng, multiple=5, min=10):
+#    distance= max(min, ((maxLeng+ multiple- 1) // multiple) * multiple)
+#    return distance
+
+#inv = arg.checkInventory()
+#maxLength = {}
+#for item in inv:
+#    for column, val in inv.items():
+#        lengthVal = len(str(val))
+#        maxLength[column] = maxLength(max(maxLength.get(column, 0), lengthVal))
+
+#print (maxLength)
+#print('{:<{colId}} {:^{colName}} {:^{colStock}} {:^{colPrice}}'.format(
+#    "ID", "Nombre", "Stock", "Precio",
+#    colId=6,
+#    colName=maxLength["item_name"],
+#    colStock=maxLength["item_stock"],
+#    colPrice=maxLength["item_price"]
+#))
+#print("=" * sum(maxLength.values()))
+
+#for producto in inv:
+#    print('{:<{colId}} {:<{colName}}  {:>{colStock}} {:>{colPrice}.2f} '.format(producto["item_id"],
+#        producto["item_name"],producto["item_stock"],producto["item_price"],
+#        colId=6,
+#        colName=maxLength["item_name"],
+#        colStock=maxLength["item_stock"],
+#        colPrice=maxLength["item_price"]
 #    ))
