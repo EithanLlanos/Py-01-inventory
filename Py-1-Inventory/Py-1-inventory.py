@@ -1,4 +1,5 @@
 # -*- coding: latin-1 -*-
+import email
 import time
 
 
@@ -12,13 +13,15 @@ import time
 # is the item_id and the value is a dictionary containing the item_name, stock_count, and price.
 
 
-
+def maxLength(maxLeng,multiple=5, mini=10):
+    distance = max(mini,((maxLeng + multiple - 1) // multiple) * multiple)
+    return distance
 class Inventory:
     def __init__(self,name,id1):
         self.nameInventory=name
         self.idInventory=id1
         #self.__inventory={"0001":{"item_name":"val"}}
-        self.__inventory={"0001":{"item_id":"0001","item_name":"Car","item_stock":163,"item_price":12.20}}
+        self.__inventory={"0001":{"item_id":"0001","item_name":"Car","item_stock":163,"item_price":12.20},"0002" : "deleted",  "0003" : {"item_id":"0003","item_name":"Papel","item_stock":16,"item_price":102.20}}
         self.__idVal=len(self.__inventory)
         
     def verfItem(self,item):
@@ -92,7 +95,6 @@ def options(arg=0,op=[0,1,1,1,1,1],list0=[0,0,0,0]):
         print("-----------------------------------------------------")
         print("Finalizando programa...                              ")
         print("-----------------------------------------------------")
-        time.sleep(1)
         return 0
     elif(op[0]==1):
         if(op[1]==1):
@@ -111,13 +113,14 @@ def options(arg=0,op=[0,1,1,1,1,1],list0=[0,0,0,0]):
                 options(op=[-1])
                 op[0],op[1]=1,0
                 return options(arg,op,list0)
+            list0[1]=int(list0[1])
         if(op[3]==1):
             print("-----------------------------------------------------")
             print("Ingrese el precio:")
             print("-----------------------------------------------------")
             list0[2]=input("\n")
             try:
-                float(list0[2])
+                list0[2]=float(list0[2])
             except:
                 options(op=[-1])
                 op[0],op[1],op[2]=1,0,0
@@ -171,7 +174,7 @@ def options(arg=0,op=[0,1,1,1,1,1],list0=[0,0,0,0]):
                 print("\n")
                 list0[1]=input()
                 if list0[1]=="none": 
-                    list0[1]==None
+                    list0[1]=None
             if(op[3]==1):
                 print("-----------------------------------------------------")
                 print("Ingrese el nuevo stock del producto:")
@@ -181,11 +184,13 @@ def options(arg=0,op=[0,1,1,1,1,1],list0=[0,0,0,0]):
                 print("\n")
                 list0[2]=input()
                 if list0[2]=="none": 
-                    list0[2]==None
+                    list0[2]=None
                 elif not list0[2].isdigit():
                     options(op=[-1])
                     op[0],op[1],op[2]=2,0,0
                     return options(arg,op,list0)
+                else:
+                    list0[2]=int(list0[2])
             if(op[4]==1):
                 print("-----------------------------------------------------")
                 print("Ingrese el nuevo precio del producto:")
@@ -194,10 +199,10 @@ def options(arg=0,op=[0,1,1,1,1,1],list0=[0,0,0,0]):
                 print("-----------------------------------------------------")
                 print("\n")
                 list0[3]=input()
-                if list0[3]=="none": list0[3]==None
+                if list0[3]=="none": list0[3]=None
                 else: 
                     try:
-                        float(list0[3])
+                        list0[3]=float(list0[3])
                     except:
                         options(op=[-1])
                         op[0],op[1],op[2],op[3]=2,0,0,0
@@ -227,8 +232,7 @@ def options(arg=0,op=[0,1,1,1,1,1],list0=[0,0,0,0]):
         list0[0]=arg.verfItem(input())
         if(list0[0]==[-1]):
             options(op=[-2])
-            op[0]=3
-            return options(arg,op)
+            return menu(arg)
         elif(list0[0]==[0]):
             options(op=[-1])
             op[0]=3
@@ -289,21 +293,37 @@ def options(arg=0,op=[0,1,1,1,1,1],list0=[0,0,0,0]):
                 return options(arg,op,list0)
             time.sleep(2)
             return menu(arg)
-    elif(op==5):
+    elif(op[0]==5):
         inv=arg.checkInventory()
+        keyInv=list(inv.keys())
+        for i in keyInv:
+            if inv[i]=="deleted": del inv[i]
         if len(inv)==0:
             print("-----------------------------------------------------")
             print("        El inventario no tiene ningún producto       ")
             print("-----------------------------------------------------")
             return menu(arg)
-        print("-----------------------------------------------------------------")
+        dicMaxLength = {}
+        for item in inv:
+            for column,val in inv[item].items():
+                lengthVal = len(str(val))
+                dicMaxLength[column] = maxLength(max(dicMaxLength.get(column,0),lengthVal),20)
+
+        dicMaxLength["item_id"]=5
+        print("-"*sum(dicMaxLength.values()))
         print("                     Consulta de inventario  ")
         print(f"Nombre  : {arg.nameInventory}")
-        print(f"Id      : {arg.idInventory}")
-        print("-----------------------------------------------------------------")
-        print("\tIdentificador\t|\tNombre\t\t|\tStock\t|\tPrecio")
-               
+        print(f"ID      : {arg.idInventory}")
+        print("-"*sum(dicMaxLength.values()))
+        print('{:<5} {:^{colName}}{:^{colStock}}{:^{colPrice}}'.format("ID", "Nombre" , "Stock", "Precio",colName=dicMaxLength["item_name"],colStock=dicMaxLength["item_stock"],colPrice=dicMaxLength["item_price"]))
+        
+        print("-"*sum(dicMaxLength.values()))
+        
+        for producto in inv:
+            print('{:<5}{:>{colName}}{:>{colStock}}{:>{colPrice}.2f}'.format(inv[producto]["item_id"],inv[producto]["item_name"],inv[producto]["item_stock"],inv[producto]["item_price"],colName=dicMaxLength["item_name"],colStock=dicMaxLength["item_stock"],colPrice=dicMaxLength["item_price"]))
             
+        time.sleep(3)
+        return menu(arg)
 def run(stat,arg):
     print("-----------------------------------------------------")
     print("Iniciando programa...                                ")
@@ -424,6 +444,39 @@ run(1,"shopInv")
 
 #print (maxLength)
 #print('{:<{colId}} {:^{colName}} {:^{colStock}} {:^{colPrice}}'.format(
+#    "ID", "Nombre", "Stock", "Precio",
+#    colId=6,
+#    colName=maxLength["item_name"],
+#    colStock=maxLength["item_stock"],
+#    colPrice=maxLength["item_price"]
+#))
+#print("=" * sum(maxLength.values()))
+
+#for producto in inv:
+#    print('{:<{colId}} {:<{colName}}  {:>{colStock}} {:>{colPrice}.2f} '.format(producto["item_id"],
+#        producto["item_name"],producto["item_stock"],producto["item_price"],
+#        colId=6,
+#        colName=maxLength["item_name"],
+#        colStock=maxLength["item_stock"],
+#        colPrice=maxLength["item_price"]
+#    ))
+##########################################################################################################################################################################
+
+
+
+#def maxLength(maxLeng, multiple=5, min=10):
+#    distance= max(min, ((maxLeng+ multiple- 1) // multiple) * multiple)
+#    return distance
+
+#inv = arg.checkInventory()
+#maxLength = {}
+#for item in inv:
+#    for column, val in inv.items():
+#        lengthVal = len(str(val))
+#        maxLength[column] = maxLength(max(maxLength.get(column, 0), lengthVal))
+
+#print (maxLength)
+#    print('{:<{colId}} {:^{colName}} {:^{colStock}} {:^{colPrice}}'.format(
 #    "ID", "Nombre", "Stock", "Precio",
 #    colId=6,
 #    colName=maxLength["item_name"],
