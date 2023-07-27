@@ -1,5 +1,4 @@
 # -*- coding: latin-1 -*-
-import email
 import time
 
 
@@ -20,7 +19,6 @@ class Inventory:
     def __init__(self,name,id1):
         self.nameInventory=name
         self.idInventory=id1
-        #self.__inventory={"0001":{"item_name":"val"}}
         self.__inventory={"0001":{"item_id":"0001","item_name":"Car","item_stock":163,"item_price":12.20},"0002" : "deleted",  "0003" : {"item_id":"0003","item_name":"Papel","item_stock":16,"item_price":102.20}}
         self.__idVal=len(self.__inventory)
         
